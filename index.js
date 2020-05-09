@@ -133,34 +133,22 @@ const getIcon = function(type) {
 const getColor = function(type) {
   switch (type) {
     case 'source':
-      return 'DarkCyan'; //https://fontawesome.com/icons/water?style=solid
+      return 'red'; //https://fontawesome.com/icons/water?style=solid
       break;
     case 'moulin':
-      return 'Gold'; //https://fontawesome.com/icons/water?style=solid
-      break;
-    case 'etymologie':
-      return 'coral'; //https://fontawesome.com/icons/water?style=solid
+    case 'immeuble remarquable':
+    case 'auberge':
+    case 'manufacture':
+    case 'centre villageois':
+    case 'chateau':
+      return '#13505b'; //https://fontawesome.com/icons/water?style=solid
       break;
     case 'site remarquable':
-      return 'DarkSeaGreen'; //https://fontawesome.com/icons/bookmark?style=regular
-      break;
-    case 'immeuble remarquable':
-      return 'orange'; //https://fontawesome.com/icons/landmark?style=solid
-      break;
-    case 'auberge':
-      return 'brown'; //https://fontawesome.com/icons/beer?style=solid
-      break;
-    case 'manufacture':
-      return 'black'; //https://fontawesome.com/icons/industry?style=solid
-      break;
-    case 'chateau':
-      return 'grey'; //https://fontawesome.com/icons/chess-rook?style=solid
-      break;
-    case 'centre villageois':
-      return 'cyan'; //https://fontawesome.com/icons/fort-awesome?style=brands
+    case 'etymologie':
+      return 'darkred'; //https://fontawesome.com/icons/water?style=solid
       break;
     default:
-      return 'beige'; //https://fontawesome.com/icons/info-circle?style=solid
+      return 'darkred'; //https://fontawesome.com/icons/info-circle?style=solid
       break;
   }
 }
@@ -233,7 +221,7 @@ clipLayer.getSource().getLegends = function(){
 dataLayer.getSource().getLegends = function(){
   return function(){  
     
-    const typologie = ['source','moulin', 'etymologie', 'auberge','manufacture','chateau', 'site remarquable','centre villageois', 'immeuble remarquable']; 
+    const typologie = ['source','etymologie', 'site remarquable','moulin', 'auberge','manufacture','chateau', 'centre villageois', 'immeuble remarquable']; 
     const legends = [];
     typologie.forEach(type => legends.push({label:type,style:createTextStyle(type)}));
     return legends;
@@ -255,7 +243,7 @@ const map = new Map({
   }),
 });
 var extent = clipLayer.getSource().getExtent();
-map.getView().fit(extent, map.getSize());
+map.getView().fit(extent,{padding: [1, 1, 200, 1]});
 
 
 
