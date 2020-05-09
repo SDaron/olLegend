@@ -229,7 +229,7 @@ dataLayer.getSource().getLegends = function(){
   
 };
 
-const olLegend = new controlLegend({collapsed:false})
+const olLegend = new controlLegend({collapsible:false})
 
 const map = new Map({
   controls:[olLegend],
