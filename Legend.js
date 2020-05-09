@@ -64,7 +64,7 @@ class Legend extends Control {
      * @private
      * @type {HTMLElement}
      */
-    this.ulElement_ = document.createElement('ul');
+    this.divElement_ = document.createElement('div');
 
     /**
      * @private
@@ -134,7 +134,7 @@ class Legend extends Control {
         (this.collapsible_ ? '' : ' ol-uncollapsible');
     const element = this.element;
     element.className = cssClasses;
-    element.appendChild(this.ulElement_);
+    element.appendChild(this.divElement_);
     element.appendChild(button);
 
     /**
@@ -193,16 +193,18 @@ class Legend extends Control {
         continue;
       }
 
-
+      const ulElement = document.createElement('ul');
+      
       if (Array.isArray(legends)) {
         for (let j = 0, jj = legends.length; j < jj; ++j) {
-          visibleLegends.push(this.createLegendItem_(legends[j].label, legends[j].style, legends[j].geometry));
-          lookup[legends[j]] = true;
+          const legendItem = this.createLegendItem_(legends[j].label, legends[j].style, legends[j].geometry);
+          ulElement.appendChild(legendItem);
         }
       } else {
-        visibleLegends.push(this.createLegendItem_(legends.label,legends.style,legends.geometry));
-        lookup[legends] = true;
+        const legendItem = this.createLegendItem_(legends.label,legends.style,legends.geometry);
+        ulElement.appendChild(legendItem);
       }
+      visibleLegends.push(ulElement);
     }
     return visibleLegends;
   }
@@ -264,12 +266,12 @@ class Legend extends Control {
       return;
     }
 
-    removeChildren(this.ulElement_);
+    removeChildren(this.divElement_);
 
     // append the legends
     for (let i = 0, ii = legends.length; i < ii; ++i) {
       const element = legends[i];
-      this.ulElement_.appendChild(element);
+      this.divElement_.appendChild(element);
     }
 
     this.renderedLegends_ = legends;
