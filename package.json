@@ -1,0 +1,21 @@
+{
+  "name": "olpattern",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html --no-cache",
+    "build": "parcel build --public-url . index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "ol": "^6.3.1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
