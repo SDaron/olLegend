@@ -3,6 +3,7 @@ import 'ol/ol.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 
 import GeoJSON from 'ol/format/GeoJSON.js';
+import {Attribution} from 'ol/control';
 import {Map, View} from 'ol';
 import {Icon, RegularShape, Fill, Circle, Style, Stroke, Text} from 'ol/style';
 import {Raster as RasterSource, OSM, Stamen, Vector as VectorSource} from 'ol/source.js';
@@ -41,6 +42,7 @@ const clipLayer = new VectorLayer({
     }),
   }),
   source: new VectorSource({
+    attributions:'Egebs BRUXELLES',
     features: (new GeoJSON()).readFeatures(hydrology,{ featureProjection: 'EPSG:3857'}),
     format: new GeoJSON(),
   }),
@@ -190,49 +192,49 @@ const dataLayer = new VectorLayer({
 
 
 /****/
-background.getSource().getLegends = function(){};
-base.getSource().getLegends = function(){};
 
 clipLayer.getSource().getLegends = function(){
-  
-  return function(){
-    return [
-      {
-        label:'bassin versant',
-        geometry: 'Polygon',
-        style:new Style({
-          fill: new Fill({color: 'white'}),
-          stroke: new Stroke({color: 'red', width: '2'}),
-        })        
-      },
-      {
-        label:'rivière',
-        geometry: 'LineString',
-        style:new Style({
-          stroke: new Stroke({color: 'red', width: '2'}),
-        })
-        
-      }
-    ];
-  };
+    const legends = {
+      label: "Hydrologie",
+      items:[
+        {
+          label:'bassin versant',
+          geometry: 'Polygon',
+          style:new Style({
+            fill: new Fill({color: 'white'}),
+            stroke: new Stroke({color: 'red', width: '2'}),
+          })        
+        },
+        {
+          label:'rivière',
+          geometry: 'LineString',
+          style:new Style({
+            stroke: new Stroke({color: 'red', width: '2'}),
+          })
+          
+        }
+      ]
+    }
+    return legends;
 };
 
 
 dataLayer.getSource().getLegends = function(){
-  return function(){  
     
     const typologie = ['source','etymologie', 'site remarquable','moulin', 'auberge','manufacture','chateau', 'centre villageois', 'immeuble remarquable']; 
-    const legends = [];
-    typologie.forEach(type => legends.push({label:type,style:createTextStyle(type)}));
+    const legends = {
+      label: "Lieux historiques",
+      items:[]
+    };
+    typologie.forEach(type => legends.items.push({label:type,style:createTextStyle(type)}));
     return legends;
-  };
   
 };
 
-const olLegend = new controlLegend({collapsible:false})
+const olLegend = new controlLegend({collapsible:true,collapsed:false})
 
 const map = new Map({
-  controls:[olLegend],
+  controls:[olLegend, new Attribution()],
   //interactions:[],
   layers: [background, base, clipLayer, dataLayer],
   target: 'map1',

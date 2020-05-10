@@ -93,7 +93,7 @@ class Legend extends Control {
 
     const tipLabel = options.tipLabel !== undefined ? options.tipLabel : 'Legends';
 
-    const collapseLabel = options.collapseLabel !== undefined ? options.collapseLabel : '\u00BB';
+    const collapseLabel = options.collapseLabel !== undefined ? options.collapseLabel : '\u00AB';
 
     if (typeof collapseLabel === 'string') {
       /**
@@ -106,7 +106,7 @@ class Legend extends Control {
       this.collapseLabel_ = collapseLabel;
     }
 
-    const label = options.label !== undefined ? options.label : 'i';
+    const label = options.label !== undefined ? options.label : 'L';
 
     if (typeof label === 'string') {
       /**
@@ -182,29 +182,37 @@ class Legend extends Control {
       if (!source) {
         continue;
       }
-
-      const legendGetter = source.getLegends();
-      if (!legendGetter) {
-        continue;
+      
+      let legends;
+      
+      if (typeof source.getLegends === 'function') {
+        legends = source.getLegends();
       }
-
-      const legends = legendGetter(frameState);
       if (!legends) {
         continue;
       }
 
-      const ulElement = document.createElement('ul');
+      const divElement = document.createElement('div');
+      const ulElement = document.createElement('ul'); 
       
-      if (Array.isArray(legends)) {
-        for (let j = 0, jj = legends.length; j < jj; ++j) {
-          const legendItem = this.createLegendItem_(legends[j].label, legends[j].style, legends[j].geometry);
+      if (legends.label) {    
+        const labelElement = document.createElement('div');
+        labelElement.textContent = legends.label;
+        labelElement.className = 'ol-legend-label';
+        divElement.appendChild(labelElement);
+      }
+      
+      if (Array.isArray(legends.items)) {
+        for (let j = 0, jj = legends.items.length; j < jj; ++j) {
+          const legendItem = this.createLegendItem_(legends.items[j].label, legends.items[j].style, legends.items[j].geometry);
           ulElement.appendChild(legendItem);
         }
-      } else {
-        const legendItem = this.createLegendItem_(legends.label,legends.style,legends.geometry);
+      } else if(legends.items){
+        const legendItem = this.createLegendItem_(legends.items.label,legends.items.style,legends.items.geometry);
         ulElement.appendChild(legendItem);
       }
-      visibleLegends.push(ulElement);
+      divElement.appendChild(ulElement);
+      visibleLegends.push(divElement);
     }
     return visibleLegends;
   }

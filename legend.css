@@ -1,10 +1,16 @@
 .ol-legend {
   bottom: .5em;
   left: .5em;
-  max-width: calc(100% - 1.3em);
-  font-size:small;
+  max-width: calc(100% - 1.3em);  
+}
+.ol-legend > div {
+  font-size:small; 
 }
 
+.ol-legend-label {
+  margin:0.5em;
+  border-bottom:1px solid #333;
+}
 
 .ol-legend ul {
   margin: 0;
@@ -41,7 +47,7 @@
 .ol-legend button {
   display: inline-block;
 }
-.ol-legend.ol-collapsed ul {
+.ol-legend.ol-collapsed div div {
   display: none;
 }
 .ol-legend:not(.ol-collapsed) {
