@@ -21,7 +21,7 @@
   flex-wrap: wrap;
 }
 .ol-legend li {  
-  flex-basis: 25%;
+  flex-basis: 22%;
   margin-right:2em;
   display: flex;
   align-items: center;
