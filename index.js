@@ -49,9 +49,7 @@ const clipLayer = new VectorLayer({
 });
 
 //Giving the clipped layer an extent is necessary to avoid rendering when the feature is outside the viewport
-clipLayer.getSource().on('addfeature', function () {
-  base.setExtent(clipLayer.getSource().getExtent());
-});
+base.setExtent(clipLayer.getSource().getExtent());
 
 const style = new Style({
   fill: new Fill({
@@ -71,14 +69,6 @@ background.on('postrender', function (e) {
     vectorContext.drawFeature(feature, style);
   });
   e.context.globalCompositeOperation = 'source-over';
-  /*
-  var imageData = context.getImageData(0,0,canvas.width,  canvas.height);
-  var data = imageData.data;
-  for (var i = 0; i < data.length; i += 4) {
-    data[i + 3] = data[i];
-  }
-  ctx.putImageData(imageData, 0, 0); 
-  */
 });
 
 base.on('postrender', function (e) {
@@ -233,6 +223,7 @@ dataLayer.getSource().getLegends = function(){
 
 const olLegend = new controlLegend({collapsible:true,collapsed:false})
 
+const extent = clipLayer.getSource().getExtent();
 const map = new Map({
   controls:[olLegend, new Attribution()],
   //interactions:[],
@@ -244,8 +235,7 @@ const map = new Map({
     zoom: 0
   }),
 });
-var extent = clipLayer.getSource().getExtent();
-map.getView().fit(extent,{padding: [1, 1, 200, 1]});
+map.getView().fit(extent,{nearest:true,padding: [1, 1, 200, 1]});
 
 
 
