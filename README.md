@@ -28,28 +28,27 @@ const layer = new VectorLayer({
   }),
 });
 
+layer.getSource().getName = function(){
+  return "Hydrologie";
+};
 layer.getSource().getLegends = function(){
-    const legends = {
-      label: "Hydrologie",
-      items:[
-        {
-          label:'bassin versant',
-          geometry: 'Polygon',
-          style:new Style({
-            fill: new Fill({color: 'white'}),
-            stroke: new Stroke({color: 'red', width: '2'}),
-          })        
-        },
-        {
-          label:'rivière',
-          geometry: 'LineString',
-          style:new Style({
-            stroke: new Stroke({color: 'red', width: '2'}),
-          })
-          
-        }
-      ]
-    }
+    const legends = [
+      {
+        label:'bassin versant',
+        geometry: 'Polygon',
+        style:new Style({
+          fill: new Fill({color: 'white'}),
+          stroke: new Stroke({color: 'red', width: '2'}),
+        })        
+      },
+      {
+        label:'rivière',
+        geometry: 'LineString',
+        style:new Style({
+          stroke: new Stroke({color: 'red', width: '2'}),
+        })        
+      }
+    ];
     return legends;
 };
 const map = new Map({
