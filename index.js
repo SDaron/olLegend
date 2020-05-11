@@ -193,40 +193,40 @@ const dataLayer = new VectorLayer({
 
 /****/
 
+clipLayer.getSource().getName = function(){
+  return "Hydrologie";
+};
 clipLayer.getSource().getLegends = function(){
-    const legends = {
-      label: "Hydrologie",
-      items:[
-        {
-          label:'bassin versant',
-          geometry: 'Polygon',
-          style:new Style({
-            fill: new Fill({color: 'white'}),
-            stroke: new Stroke({color: 'red', width: '2'}),
-          })        
-        },
-        {
-          label:'rivière',
-          geometry: 'LineString',
-          style:new Style({
-            stroke: new Stroke({color: 'red', width: '2'}),
-          })
-          
-        }
-      ]
-    }
+    const legends = [
+      {
+        label:'bassin versant',
+        geometry: 'Polygon',
+        style:new Style({
+          fill: new Fill({color: 'white'}),
+          stroke: new Stroke({color: 'red', width: '2'}),
+        })        
+      },
+      {
+        label:'rivière',
+        geometry: 'LineString',
+        style:new Style({
+          stroke: new Stroke({color: 'red', width: '2'}),
+        })
+        
+      }
+    ];
     return legends;
 };
 
 
+dataLayer.getSource().getName = function(){
+  return "Lieux historiques";
+};
 dataLayer.getSource().getLegends = function(){
     
     const typologie = ['source','etymologie', 'site remarquable','moulin', 'auberge','manufacture','chateau', 'centre villageois', 'immeuble remarquable']; 
-    const legends = {
-      label: "Lieux historiques",
-      items:[]
-    };
-    typologie.forEach(type => legends.items.push({label:type,style:createTextStyle(type)}));
+    const legends = [];
+    typologie.forEach(type => legends.push({label:type,style:createTextStyle(type)}));
     return legends;
   
 };

@@ -194,21 +194,21 @@ class Legend extends Control {
 
       const divElement = document.createElement('div');
       const ulElement = document.createElement('ul'); 
-      
-      if (legends.label) {    
+
+      if (typeof source.getName === 'function') {
         const labelElement = document.createElement('div');
-        labelElement.textContent = legends.label;
+        labelElement.textContent = source.getName();
         labelElement.className = 'ol-legend-label';
         divElement.appendChild(labelElement);
-      }
+      }      
       
-      if (Array.isArray(legends.items)) {
-        for (let j = 0, jj = legends.items.length; j < jj; ++j) {
-          const legendItem = this.createLegendItem_(legends.items[j].label, legends.items[j].style, legends.items[j].geometry);
+      if (Array.isArray(legends)) {
+        for (let j = 0, jj = legends.length; j < jj; ++j) {
+          const legendItem = this.createLegendItem_(legends[j].label, legends[j].style, legends[j].geometry);
           ulElement.appendChild(legendItem);
         }
-      } else if(legends.items){
-        const legendItem = this.createLegendItem_(legends.items.label,legends.items.style,legends.items.geometry);
+      } else if(legends){
+        const legendItem = this.createLegendItem_(legends.label,legends.style,legends.geometry);
         ulElement.appendChild(legendItem);
       }
       divElement.appendChild(ulElement);
