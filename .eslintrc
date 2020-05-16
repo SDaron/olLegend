@@ -1,0 +1,10 @@
+{
+  "extends": ["openlayers","plugin:jsdoc/recommended"],
+  "plugins": [
+    "jsdoc"
+  ],
+  "rules": {
+    "valid-jsdoc": "off",
+    "jsdoc/check-examples": 0
+  }
+}

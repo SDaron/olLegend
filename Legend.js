@@ -1,19 +1,17 @@
 /**
  * @module ol/control/Legend
  */
-import {equals} from 'ol/array.js';
 import Control from 'ol/control/Control.js';
-import {CLASS_CONTROL, CLASS_UNSELECTABLE, CLASS_COLLAPSED} from 'ol/css.js';
-import {removeChildren, replaceNode} from 'ol/dom.js';
 import EventType from 'ol/events/EventType.js';
-import {inView} from 'ol/layer/Layer.js';
-import {toContext} from 'ol/render';
+import {CLASS_COLLAPSED, CLASS_CONTROL, CLASS_UNSELECTABLE} from 'ol/css.js';
 import {LineString, Point, Polygon} from 'ol/geom';
-import {getVectorContext} from 'ol/render.js';
-
+import {equals} from 'ol/array.js';
+import {inView} from 'ol/layer/Layer.js';
+import {removeChildren, replaceNode} from 'ol/dom.js';
+import {toContext} from 'ol/render';
 
 /**
- * @typedef {Object} Options
+ * @typedef {object} Options
  * @property {string} [className='ol-legend'] CSS class name.
  * @property {HTMLElement|string} [target] Specify a target if you
  * want the control to be rendered outside of the map's
@@ -24,7 +22,7 @@ import {getVectorContext} from 'ol/render.js';
  * @property {boolean} [collapsed=true] Specify if legends should
  * be collapsed at startup.
  * @property {string} [tipLabel='Legends'] Text label to use for the button tip.
- * @property {string} [label='i'] Text label to use for the
+ * @property {string} [label='L'] Text label to use for the
  * collapsed legends button.
  * Instead of text, also an element (e.g. a `span` element) can be used.
  * @property {string|HTMLElement} [collapseLabel='»'] Text label to use
@@ -35,29 +33,27 @@ import {getVectorContext} from 'ol/render.js';
  * callback.
  */
 
-
 /**
  * @classdesc
  * Control to show all the legends associated with the layer sources
- * in the map. This control is one of the default controls included in maps.
- * By default it will show in the bottom right portion of the map, but this can
+ * By default it will show in the bottom left portion of the map, but this can
  * be changed by using a css selector for `.ol-legend`.
  *
- * @api
  */
 class Legend extends Control {
-
   /**
-   * @param {Options=} opt_options Legend options.
+   * Build the legend
+   *
+   * @param {object} opt_options - Legend options.
+   * @example new Legend()
    */
   constructor(opt_options) {
-
     const options = opt_options ? opt_options : {};
 
     super({
       element: document.createElement('div'),
       render: options.render || render,
-      target: options.target
+      target: options.target,
     });
 
     /**
@@ -70,7 +66,8 @@ class Legend extends Control {
      * @private
      * @type {boolean}
      */
-    this.collapsed_ = options.collapsed !== undefined ? options.collapsed : true;
+    this.collapsed_ =
+      options.collapsed !== undefined ? options.collapsed : true;
 
     /**
      * @private
@@ -82,18 +79,21 @@ class Legend extends Control {
      * @private
      * @type {boolean}
      */
-    this.collapsible_ = options.collapsible !== undefined ?
-      options.collapsible : true;
+    this.collapsible_ =
+      options.collapsible !== undefined ? options.collapsible : true;
 
     if (!this.collapsible_) {
       this.collapsed_ = false;
     }
 
-    const className = options.className !== undefined ? options.className : 'ol-legend';
+    const className =
+      options.className !== undefined ? options.className : 'ol-legend';
 
-    const tipLabel = options.tipLabel !== undefined ? options.tipLabel : 'Legends';
+    const tipLabel =
+      options.tipLabel !== undefined ? options.tipLabel : 'Legends';
 
-    const collapseLabel = options.collapseLabel !== undefined ? options.collapseLabel : '\u00AB';
+    const collapseLabel =
+      options.collapseLabel !== undefined ? options.collapseLabel : '\u00AB';
 
     if (typeof collapseLabel === 'string') {
       /**
@@ -119,19 +119,27 @@ class Legend extends Control {
       this.label_ = label;
     }
 
-
-    const activeLabel = (this.collapsible_ && !this.collapsed_) ?
-      this.collapseLabel_ : this.label_;
+    const activeLabel =
+      this.collapsible_ && !this.collapsed_ ? this.collapseLabel_ : this.label_;
     const button = document.createElement('button');
     button.setAttribute('type', 'button');
     button.title = tipLabel;
     button.appendChild(activeLabel);
 
-    button.addEventListener(EventType.CLICK, this.handleClick_.bind(this), false);
+    button.addEventListener(
+      EventType.CLICK,
+      this.handleClick_.bind(this),
+      false
+    );
 
-    const cssClasses = className + ' ' + CLASS_UNSELECTABLE + ' ' + CLASS_CONTROL +
-        (this.collapsed_ && this.collapsible_ ? ' ' + CLASS_COLLAPSED : '') +
-        (this.collapsible_ ? '' : ' ol-uncollapsible');
+    const cssClasses =
+      className +
+      ' ' +
+      CLASS_UNSELECTABLE +
+      ' ' +
+      CLASS_CONTROL +
+      (this.collapsed_ && this.collapsible_ ? ' ' + CLASS_COLLAPSED : '') +
+      (this.collapsible_ ? '' : ' ol-uncollapsible');
     const element = this.element;
     element.className = cssClasses;
     element.appendChild(this.divElement_);
@@ -139,6 +147,7 @@ class Legend extends Control {
 
     /**
      * A list of currently rendered resolutions.
+     *
      * @type {Array<string>}
      * @private
      */
@@ -149,24 +158,20 @@ class Legend extends Control {
      * @type {boolean}
      */
     this.renderedVisible_ = true;
-
   }
 
   /**
    * Collect a list of visible legends and set the collapsible state.
-   * @param {import("../PluggableMap.js").FrameState} frameState Frame state.
-   * @return {Array<string>} Legends.
+   *
+   * @param {object} frameState - Frame state.
+   * @returns {Array} legends - Array of legends.
    * @private
+   * @example
    */
   collectSourceLegends_(frameState) {
     /**
-     * Used to determine if an legend already exists.
-     * @type {!Object<string, boolean>}
-     */
-    const lookup = {};
-
-    /**
      * A list of visible legends.
+     *
      * @type {Array<string>}
      */
     const visibleLegends = [];
@@ -182,9 +187,9 @@ class Legend extends Control {
       if (!source) {
         continue;
       }
-      
+
       let legends;
-      
+
       if (typeof source.getLegends === 'function') {
         legends = source.getLegends();
       }
@@ -193,24 +198,33 @@ class Legend extends Control {
       }
 
       const divElement = document.createElement('div');
-      const ulElement = document.createElement('ul'); 
+      const ulElement = document.createElement('ul');
 
       if (source.get('title')) {
         const labelElement = document.createElement('div');
         labelElement.textContent = source.get('title');
         labelElement.className = 'ol-legend-label';
-        divElement.appendChild(labelElement);        
-      }     
-      
+        divElement.appendChild(labelElement);
+      }
+
       if (Array.isArray(legends)) {
         for (let j = 0, jj = legends.length; j < jj; ++j) {
-          const legendItem = this.createLegendItem_(legends[j].label, legends[j].style, legends[j].geometry);
+          const legendItem = this.createLegendItem_(
+            legends[j].label,
+            legends[j].style,
+            legends[j].geometry
+          );
           ulElement.appendChild(legendItem);
         }
-      } else if(legends){
-        const legendItem = this.createLegendItem_(legends.label,legends.style,legends.geometry);
+      } else if (legends) {
+        const legendItem = this.createLegendItem_(
+          legends.label,
+          legends.style,
+          legends.geometry
+        );
         ulElement.appendChild(legendItem);
       }
+
       divElement.appendChild(ulElement);
       visibleLegends.push(divElement);
     }
@@ -219,39 +233,63 @@ class Legend extends Control {
 
   /**
    * Create a legend item.
-   * @param {string} label Label of the legend.
-   * @param {import("../../style/Style.js").default|Array<import("../../style/Style.js").default>} styles The style or array of styles.
-   * @return {Array<string>} Legends.
+   *
+   * @param {string} label - Label of the legend.
+   * @param {import("ol/Style.js").default} style - The style or array of styles.
+   * @param {string} geometry - Point, LineString or Polygon
+   * @returns {HTMLElement} legendItem - Legends item.
    * @private
+   * @example
    */
-  createLegendItem_(label,style,geometry) {
+  createLegendItem_(label, style, geometry) {
     const legendItem = document.createElement('li');
     const legendItemCanvas = document.createElement('canvas');
     const legendItemLabel = document.createElement('span');
     legendItemLabel.textContent = label;
-    
 
-    const vectorContext = toContext(legendItemCanvas.getContext('2d'), {size: [30, 30]});
+    let olGeometry;
+
+    const vectorContext = toContext(legendItemCanvas.getContext('2d'), {
+      size: [30, 30],
+    });
     vectorContext.setStyle(style);
-    
-    if(geometry == 'Polygon'){
-      vectorContext.drawGeometry(new Polygon([[[2, 6], [15, 6], [28, 2], [26, 24], [10, 20], [4, 26], [2, 2]]]));
-    }else if(geometry == 'LineString'){
-      vectorContext.drawGeometry((new LineString([[0, 15], [6, 10], [12, 20], [18, 18], [24,15], [30,15]])));
-    }else{
-      vectorContext.drawGeometry(new Point([15, 15]));
+    if (geometry == 'Polygon') {
+      olGeometry = new Polygon([
+        [
+          [2, 6],
+          [15, 6],
+          [28, 2],
+          [26, 24],
+          [10, 20],
+          [4, 26],
+          [2, 2],
+        ],
+      ]);
+    } else if (geometry == 'LineString') {
+      olGeometry = new LineString([
+        [0, 15],
+        [6, 10],
+        [12, 20],
+        [18, 18],
+        [24, 15],
+        [30, 15],
+      ]);
+    } else {
+      olGeometry = new Point([15, 15]);
     }
-    
-    
+
+    vectorContext.drawGeometry(olGeometry);
+
     legendItem.appendChild(legendItemCanvas);
     legendItem.appendChild(legendItemLabel);
-    
+
     return legendItem;
   }
-  
+
   /**
    * @private
-   * @param {?import("../PluggableMap.js").FrameState} frameState Frame state.
+   * @param {?import("ol/PluggableMap.js").FrameState} frameState Frame state.
+   * @example
    */
   updateElement_(frameState) {
     if (!frameState) {
@@ -288,6 +326,7 @@ class Legend extends Control {
   /**
    * @param {MouseEvent} event The event to handle
    * @private
+   * @example
    */
   handleClick_(event) {
     event.preventDefault();
@@ -296,6 +335,7 @@ class Legend extends Control {
 
   /**
    * @private
+   * @example
    */
   handleToggle_() {
     this.element.classList.toggle(CLASS_COLLAPSED);
@@ -309,8 +349,9 @@ class Legend extends Control {
 
   /**
    * Return `true` if the legend is collapsible, `false` otherwise.
-   * @return {boolean} True if the widget is collapsible.
-   * @api
+   *
+   * @returns {boolean}  True if the widget is collapsible.
+   * @example
    */
   getCollapsible() {
     return this.collapsible_;
@@ -318,8 +359,9 @@ class Legend extends Control {
 
   /**
    * Set whether the legend should be collapsible.
-   * @param {boolean} collapsible True if the widget is collapsible.
-   * @api
+   *
+   * @param {boolean}  collapsible - True if the widget is collapsible.
+   * @example
    */
   setCollapsible(collapsible) {
     if (this.collapsible_ === collapsible) {
@@ -336,8 +378,9 @@ class Legend extends Control {
    * Collapse or expand the legend according to the passed parameter. Will
    * not do anything if the legend isn't collapsible or if the current
    * collapsed state is already the one requested.
-   * @param {boolean} collapsed True if the widget is collapsed.
-   * @api
+   *
+   * @param {boolean} collapsed - True if the widget is collapsed.
+   * @example
    */
   setCollapsed(collapsed) {
     if (!this.collapsible_ || this.collapsed_ === collapsed) {
@@ -349,23 +392,25 @@ class Legend extends Control {
   /**
    * Return `true` when the legend is currently collapsed or `false`
    * otherwise.
-   * @return {boolean} True if the widget is collapsed.
-   * @api
+   *
+   * @returns {boolean} True if the widget is collapsed.
+   * @example
    */
   getCollapsed() {
     return this.collapsed_;
   }
 }
 
-
 /**
  * Update the legend element.
- * @param {import("../MapEvent.js").default} mapEvent Map event.
- * @this {Legend}
+ *
+ * @class
+ * @param {import("ol/MapEvent.js").default} mapEvent Map event.
+ * @this {Legend} Legend
+ * @example
  */
 export function render(mapEvent) {
   this.updateElement_(mapEvent.frameState);
 }
-
 
 export default Legend;
