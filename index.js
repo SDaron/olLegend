@@ -43,10 +43,12 @@ const clipLayer = new VectorLayer({
   }),
   source: new VectorSource({
     attributions:'Egebs BRUXELLES',
+    title: 'Hydrologie du Maelbeek',
     features: (new GeoJSON()).readFeatures(hydrology,{ featureProjection: 'EPSG:3857'}),
     format: new GeoJSON(),
   }),
 });
+clipLayer.getSource().set('title','Hydrologie du Maelbeek');
 
 //Giving the clipped layer an extent is necessary to avoid rendering when the feature is outside the viewport
 base.setExtent(clipLayer.getSource().getExtent());
@@ -183,9 +185,6 @@ const dataLayer = new VectorLayer({
 
 /****/
 
-clipLayer.getSource().getName = function(){
-  return "Hydrologie";
-};
 clipLayer.getSource().getLegends = function(){
     const legends = [
       {
@@ -208,10 +207,7 @@ clipLayer.getSource().getLegends = function(){
     return legends;
 };
 
-
-dataLayer.getSource().getName = function(){
-  return "Lieux historiques";
-};
+dataLayer.getSource().set('title',"Lieux historiques");
 dataLayer.getSource().getLegends = function(){
     
     const typologie = ['source','etymologie', 'site remarquable','moulin', 'auberge','manufacture','chateau', 'centre villageois', 'immeuble remarquable']; 
@@ -235,7 +231,7 @@ const map = new Map({
     zoom: 0
   }),
 });
-map.getView().fit(extent,{nearest:true,padding: [1, 1, 200, 1]});
+map.getView().fit(extent,{padding: [1, 1, 200, 1]});
 
 
 

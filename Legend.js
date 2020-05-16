@@ -195,12 +195,12 @@ class Legend extends Control {
       const divElement = document.createElement('div');
       const ulElement = document.createElement('ul'); 
 
-      if (typeof source.getName === 'function') {
+      if (source.get('title')) {
         const labelElement = document.createElement('div');
-        labelElement.textContent = source.getName();
+        labelElement.textContent = source.get('title');
         labelElement.className = 'ol-legend-label';
-        divElement.appendChild(labelElement);
-      }      
+        divElement.appendChild(labelElement);        
+      }     
       
       if (Array.isArray(legends)) {
         for (let j = 0, jj = legends.length; j < jj; ++j) {
