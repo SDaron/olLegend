@@ -28,9 +28,7 @@ const layer = new VectorLayer({
   }),
 });
 
-layer.getSource().getName = function(){
-  return "Hydrologie";
-};
+layer.getSource().set('title',"Hydrologie");
 layer.getSource().getLegends = function(){
     const legends = [
       {
